@@ -1,5 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 
+#---------- Variables ----------
 #Colours
 greenColour="\e[0;32m\033[1m"
 endColour="\033[0m\e[0m"
@@ -10,45 +11,116 @@ purpleColour="\e[0;35m\033[1m"
 turquoiseColour="\e[0;36m\033[1m"
 grayColour="\e[0;37m\033[1m"
 
-##Funciones#########
+dot="${redColour}[${endColour}${yellowColour}*${endColour}${redColour}]${endColour}"
 
-##Ayuditaxd(h) 
-function ayuda(){
-	echo  -e "\n${redColour}[*]Modos: -a[Rápido] -b[Detallado] -c[Agresivo][*]${endColour}" 2>/dev/null 
-        echo -e "\n${blueColour}[*]Uso:sudo ./script [-a][-b][-c] <IP> [*]${endColour}" 2>/dev/null
- 
-}       
+#---------- Functions ----------
 
-##fast (a)
+function doneText(){
+	echo -e "\n$dot ${blueColour}Done!${endColour}..."
+}
+
+# Banner
+function banner(){
+	clear
+	echo "                                                                                      "
+	echo -e "${redColour}   █████████                                                              "
+	echo -e "${redColour}  ███░░░░░███                                                             "
+	echo -e "${redColour} ░███    ░░░   ██████   ██████   ████████   ████████    ██████  ████████  "
+	echo -e "${redColour} ░░█████████  ███░░███ ░░░░░███ ░░███░░███ ░░███░░███  ███░░███░░███░░███ "
+	echo -e "${redColour}  ░░░░░░░░███░███ ░░░   ███████  ░███ ░███  ░███ ░███ ░███████  ░███ ░░░  "
+	echo -e "${redColour}  ███    ░███░███  ███ ███░░███  ░███ ░███  ░███ ░███ ░███░░░   ░███      "
+	echo -e "${redColour} ░░█████████ ░░██████ ░░████████ ████ █████ ████ █████░░██████  █████     "
+	echo -e "${redColour}  ░░░░░░░░░   ░░░░░░   ░░░░░░░░ ░░░░ ░░░░░ ░░░░ ░░░░░  ░░░░░░  ░░░░░      ${purpleColour}by: ${yellowColour}@kyb3rvizsla @s4ori"
+	echo "                                                                                      "
+
+	echo -e "\n${yellowColour}Use:"
+	echo -e "${grayColour}[${endColour}${yellowColour}*${endColour}${grayColour}]${endColour} ${greenColour}scanner ${turquoiseColour}<Mode> <IP>"
+
+	echo -e "\n${yellowColour}Modes:"
+	echo -e "$dot${purpleColour} -f ${blueColour}Fast"
+	echo -e "$dot${purpleColour} -d ${blueColour}Detailed"
+	echo -e "$dot${purpleColour} -a ${blueColour}Aggresive"
+}
+
+# fast
 function fast(){
 	nmap --min-rate 5000 -p- $fast -Pn -n -oN fastscan
-	echo -e "\n${greenColour}[*]Hecho!. . . [*]${endColour}" 
+	doneText
 }
 
-##detailed 
+# detailed 
 function detailed(){
 	nmap --min-rate 5000 -p- $detailed -sCV -Pn -n -oN detailedscan
-	echo -e "\n${yellowColour}[*]Hecho!. . . [*]${endColour}" 
+	doneText
 }
 
-##steal+detailed
-function stealdetail(){
+# agresive
+function agresive(){
 	sudo nmap --min-rate 5000 -p- $steal -sCV -sS -Pn -n -oN hardscan -Pn 
-	echo -e "\n${redColour}[*]Hecho!. . . [*]${endColour}" 
+	doneText
 }
 
-##Main 
-
-counter=0 ; while getopts "a:b:c:h:" opt;
-do
-
-	case $opt in 
-		h)ayuda=$OPTARG; let counter+=1 ; if [[ $counter == 1 ]]; then ayuda;  fi ;;
-
-		a)fast=$OPTARG; let counter+=2 ; if [[ $counter == 2 ]] ; then fast; fi ;;
-
-		b)detailed=$OPTARG; let counter+=3 ; if [[ $counter == 3 ]] ; then detailed ; fi ;;
-
-		c)steal=$OPTARG; let counter+=4 ; if [[ $counter == 4 ]] ; then stealdetail ; fi ;;
+function opciones(){
+	while getopts ":fdah:help" option;
+	do
+		case $option in
+		f)
+			state='1'
+			fast
+		;;
+		d)
+			detailed
+		;;
+		a)
+			agresive
+		;;
+		h)
+			banner
+		;;
+		help)
+			banner
+		;;
+		*)
+			echo -e "${redColour}R U Drunk?${endColour} ${yellowColour}that option does not exist,try with:${endColour} ${grayColour}scanner -help"
+		;;
 	esac
+	done
+}
+#---------- Script ----------
+# Main
+state='0'
+
+while getopts ":fdah:help" option;
+do
+	case $option in
+	f)
+		state='1'
+		fast
+	;;
+	d)
+		state='1'
+		detailed
+	;;
+	a)
+		state='1'
+		agresive
+	;;
+	h)
+		state='1'
+		banner
+	;;
+	help)
+		state='1'
+		banner
+	;;
+	*)
+		echo -e "${redColour}R U Drunk?${endColour} ${yellowColour}that option does not exist,try with:${endColour} ${grayColour}scanner -help"
+	;;
+esac
 done
+
+if [ $state = "0" ]; then
+	banner;
+else
+	whoami > /dev/null
+fi

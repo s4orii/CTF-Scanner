@@ -1,25 +1,36 @@
-# CTF-Scanner
-Scanner for ctfs
+# CTF Scanner
+
+## Scanner for CTFs
 
 Install:
+```bash
+git clone https://github.com/kyb3rvizsla/Scanner.git
+cd CTF-Scanner
+sudo make install
+cd ..
+rm -rf CTF-Scanner
+```
 
-1.- git clone 
+Unistall:
+```bash
+git clone https://github.com/kyb3rvizsla/Scanner.git
+cd CTF-Scanner
+sudo make unistall
+```
 
+## Use: 
 
-2.- chmod +x scanner.sh
+```console
+scanner <Mode> <IP>
+```
 
+Or in offline mode (not clonning repo):
+```shell
+curl https://raw.githubusercontent.com/kyb3rvizsla/Scanner/main/scanner | bash
+```
 
-3.- ./scanner [-a | -b | -c ] <ip> 
+Modes:
 
-
-
-Use: 
-
-
-[*]Modos: -a[Rápido/fast] -b[Detallado/Detailed] -c[Agresivo/Aggresive][*]
-
-
-[*]Uso:sudo ./script [-a][-b][-c] <IP> [*]
-
-@s4ori
-        
+* Fast (**-f**)
+* Detailed (**-d**)
+* Aggresive (**-a**)
